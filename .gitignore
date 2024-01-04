@@ -1,3 +1,9 @@
+node_modules
+env
+.env
+.idea
+/idea
+
 # See http://help.github.com/ignore-files/ for more about ignoring files.
 
 # Compiled output
@@ -40,3 +46,5 @@ testem.log
 # System files
 .DS_Store
 Thumbs.db
+
+ecosystem.config.js
