@@ -24,7 +24,7 @@ declare interface RouteInfo {
   styleUrls: ['./sidebar.component.scss']
 })
 export class SidebarComponent implements OnInit{
-  // @Output() onClose: EventEmitter<void> = new EventEmitter<void>();
+  @Output() onClose: EventEmitter<void> = new EventEmitter<void>();
   menuItems!: any[];
 
   constructor() { }
@@ -33,4 +33,7 @@ export class SidebarComponent implements OnInit{
     // this.menuItems = ROUTES.filter(menuItem => menuItem);
     // console.log('menu items ', this.menuItems)
   }
+  // closeSidebar(): void {
+  //   this.onClose.emit();
+  // }
 }
