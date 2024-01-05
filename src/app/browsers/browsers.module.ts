@@ -11,7 +11,8 @@ import { BrowsersComponent } from './browsers.component';
   ],
   imports: [
     CommonModule,
-    BrowsersRoutingModule
+    BrowsersRoutingModule,
+
   ]
 })
 export class BrowsersModule { }
