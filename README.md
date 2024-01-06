@@ -4,7 +4,10 @@ docker-compose up --build
 # Project Overview
 
 ## Purpose
-This project is built for displaying and analyzing statistics, specifically focused on client search data. It is designed to provide insights into various metrics such as device type, operating system, brand, and IP location details (country and town).
+This project is built for displaying and analyzing statistics, specifically focused on client search data. 
+It is designed to provide insights into various metrics such as device type, operating system, brand,
+and IP location details (country and town). More information can be found at [Search Data Analysis Project](http://62.171.167.229:4000/home/search).
+
 
 ## Technology Stack
 

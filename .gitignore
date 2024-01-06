@@ -50,3 +50,7 @@ testem.log
 Thumbs.db
 
 ecosystem.config.js
+
+firebase.json
+.firebaserc
+.firebase
