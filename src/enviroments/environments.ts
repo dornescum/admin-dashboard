@@ -6,6 +6,6 @@ export interface Environment {
 
 export const environment: Environment = {
   production: false,
-  apiUrl: 'http://62.171.167.229:3002/api/v1/',
+  apiUrl: '',
   // apiUrl: 'http://localhost:3002/api/v1/',
 };
