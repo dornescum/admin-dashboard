@@ -1,5 +1,4 @@
 import {Component, HostListener} from '@angular/core';
-import {Router} from "@angular/router";
 import {SidebarService} from "./services/sidebar.service";
 
 
@@ -14,8 +13,7 @@ export class AppComponent {
   constructor(private sidebarService: SidebarService ) { }
 
   @HostListener('document:click', ['$event'])
-  onDocumentClick(event: MouseEvent): void {
-    // console.log('document clicked', event);
+  onDocumentClick(): void {
     this.sidebarService.closeSidebar();
   }
 }

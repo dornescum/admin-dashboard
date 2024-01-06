@@ -1,29 +1,30 @@
-import { Component, ViewChild, ElementRef} from '@angular/core';
+import { Component, ViewChild, ElementRef, OnInit } from '@angular/core';
 import {ApiService} from "../services/api.service";
 import Chart from 'chart.js/auto';
+import { DeviceBrowserInfo, DeviceOSInfo, DeviceTypeInfo, JobOccurrence } from '../models/Utils';
+import { statusMessages } from '../models/clientMessages';
 
 @Component({
   selector: 'app-browsers',
   templateUrl: './browsers.component.html',
   styleUrls: ['./browsers.component.scss']
 })
-export class BrowsersComponent {
+export class BrowsersComponent implements OnInit{
   @ViewChild('osChart', { static: false }) osChartRef!: ElementRef<HTMLCanvasElement>;
   @ViewChild('browserChart', { static: false }) browserChartRef!: ElementRef<HTMLCanvasElement>;
   @ViewChild('searchChart', { static: false }) searchChartRef!: ElementRef<HTMLCanvasElement>;
   @ViewChild('deviceChart', { static: false }) deviceChartRef!: ElementRef<HTMLCanvasElement>;
-  browsers!: any[];
-  os!: any[];
-  searches!: any[];
-  devices!: any[];
+  browsers!: DeviceBrowserInfo[];
+  os!: DeviceOSInfo[];
+  searches!: JobOccurrence[];
+  devices!: DeviceTypeInfo[];
   time!: unknown;
   day!: unknown;
   errorMsg = '';
   isLoading = false;
   page = 1;
   limit = 10; //10
-  total = 0;
-  chart: any;
+  chart!: never;
 
 
   constructor(private apiService: ApiService) {
@@ -41,22 +42,18 @@ export class BrowsersComponent {
     this.isLoading = true;
     this.apiService.getAllData('agency/statistics/device-os', this.page, this.limit)
       .subscribe({
-        next: (data: any) => {
-          this.os = data.data;
-          // this.updateDeviceOsChart(); // Call update here after data is set
+        next: (response: { data: DeviceOSInfo[] }) => {
+          this.os = response.data;
           // console.log('os data ', this.os);
           this.isLoading = false;
           this.time = new Date().toLocaleTimeString();
           this.day = new Date().toLocaleDateString();
-          // console.log('time ', this.time)
-          // console.log('day ', this.day)
           this.createChart()
         },
-        error: (error: any) => {
-          // Error handling
-          console.error('ERROR GET ALL DATA : ', error);
+        error: (error: Error) => {
+          console.error('ERROR GET ALL DATA : ', error.message);
           this.isLoading = false;
-          this.errorMsg = 'Error occurred';
+          this.errorMsg = statusMessages.serverError;
         }
       });
   }
@@ -65,22 +62,16 @@ export class BrowsersComponent {
     this.isLoading = true;
     this.apiService.getAllData('agency/statistics/device-browser', this.page, this.limit)
       .subscribe({
-        next: (data: any) => {
-          this.browsers = data.data;
-          // this.updateBrowserChart(); // Call update here after data is set
+        next: (response: { data: DeviceBrowserInfo[] }) => {
+          this.browsers = response.data;
           // console.log('browser data ', this.browsers);
           this.isLoading = false;
-          this.time = new Date().toLocaleTimeString();
-          this.day = new Date().toLocaleDateString();
-          // console.log('time ', this.time)
-          // console.log('day ', this.day)
           this.createBrowserChart();
         },
-        error: (error: any) => {
-          // Error handling
-          console.error('ERROR GET ALL DATA : ', error);
+        error: (error: Error) => {
+          console.error('ERROR GET ALL DATA : ', error.message);
           this.isLoading = false;
-          this.errorMsg = 'Error occurred';
+          this.errorMsg = statusMessages.serverError;
         }
       });
   }
@@ -89,18 +80,16 @@ export class BrowsersComponent {
     this.isLoading = true;
     this.apiService.getAllData('agency/statistics/search-values', this.page, this.limit)
       .subscribe({
-        next: (data: any) => {
-          this.searches = data.data;
-          // this.updateBrowserChart(); // Call update here after data is set
+        next: (response: { data: JobOccurrence[] }) => {
+          this.searches = response.data;
           // console.log('searches data ', this.searches);
           this.isLoading = false;
           this.createSearchChart();
         },
-        error: (error: any) => {
-          // Error handling
-          console.error('ERROR GET ALL DATA : ', error);
+        error: (error: Error) => {
+          console.error('ERROR GET ALL DATA : ', error.message);
           this.isLoading = false;
-          this.errorMsg = 'Error occurred';
+          this.errorMsg = statusMessages.serverError;
         }
       });
   }
@@ -109,20 +98,16 @@ export class BrowsersComponent {
     this.isLoading = true;
     this.apiService.getAllData('agency/statistics/device-type', this.page, this.limit)
       .subscribe({
-        next: (data: any) => {
-
-          this.devices = data.data;
-          // this.updateBrowserChart(); // Call update here after data is set
-          console.log('devices data ', this.devices);
+        next: (response: { data: DeviceTypeInfo[] }) => {
+          this.devices = response.data;
+          // console.log('devices data ', this.devices);
           this.isLoading = false;
-          // this.createSearchChart();
           this.createDevicesChart();
         },
-        error: (error: any) => {
-          // Error handling
-          console.error('ERROR GET ALL DATA : ', error);
+        error: (error: Error) => {
+          console.error('ERROR GET ALL DATA : ', error.message);
           this.isLoading = false;
-          this.errorMsg = 'Error occurred';
+          this.errorMsg = statusMessages.serverError;
         }
       });
   }
@@ -133,15 +118,13 @@ export class BrowsersComponent {
       console.error("OS data is not available.");
       return;
     }
-    const osData = this.os;
-    // console.log('os ', this.os);
 
-    const labels = osData.map(item => item.device_os);
-    const data = osData.map(item => parseFloat(item.percentage));
-    // console.log('l ', labels);
-    // console.log(' d ', data);
 
-    const chart = new Chart(this.osChartRef.nativeElement, {
+    const labels: string[] =this.os.map((item: DeviceOSInfo) => item.device_os);
+    const data : number[] =this.os.map((item: DeviceOSInfo) => parseFloat(item.percentage));
+
+
+     new Chart(this.osChartRef.nativeElement, {
       type: 'bar',
       data: {
         labels: labels,
@@ -149,10 +132,10 @@ export class BrowsersComponent {
           label: 'OS Distribution',
           data: data,
           backgroundColor: [
-            '#32DE84', // Android color
-            '#E95421', // Linux color
-            '#EAEAEA', // Mac OS color
-            '#0767B8', // Windows color
+            '#32DE84',
+            '#E95421',
+            '#EAEAEA',
+            '#0767B8',
           ],
           // hoverOffset: 4
         }]
@@ -177,30 +160,27 @@ export class BrowsersComponent {
       return;
     }
 
-    const browserData = this.browsers;
 
-    const labels = browserData.map(item => item.device_browser);
-    const data = browserData.map(item => parseFloat(item.percentage));
+    const labels: string[] = this.browsers.map((item: DeviceBrowserInfo) => item.device_browser);
+    const data : number[]= this.browsers.map((item: DeviceBrowserInfo) => parseFloat(item.percentage));
 
-    const browserChart = new Chart(this.browserChartRef.nativeElement, {
-      type: 'bar', // Or 'bar', 'doughnut', etc., depending on your preference
+     new Chart(this.browserChartRef.nativeElement, {
+      type: 'bar',
       data: {
         labels: labels,
         datasets: [{
           label: 'Browser Usage',
           data: data,
           backgroundColor: [
-            // Define colors for each browser
-            '#EFC342', // chrome color
-            '#F83D20', // firefox color
-            '#11ABEA', // safari
-            '#C01D20', // opera color
+            '#EFC342',
+            '#F83D20',
+            '#11ABEA',
+            '#C01D20',
           ],
           // hoverOffset: 4
         }]
       },
       options: {
-        // Define your chart options
         responsive: true,
         plugins: {
           legend: {
@@ -221,35 +201,34 @@ export class BrowsersComponent {
       return;
     }
 
-    const labels = this.devices.map(item => item.device_type);
-    const data = this.devices.map(item => parseFloat(item.percentage));
-    // console.log('l ', labels);
-    // console.log(' d ', data);
+    const labels: string[] = this.devices.map((item: DeviceTypeInfo) => item.device_type);
+    const data: number[] = this.devices.map((item: DeviceTypeInfo) => parseFloat(item.percentage));
 
-    const chart = new Chart(this.deviceChartRef.nativeElement, {
-      type: 'bar',
+   new Chart(this.deviceChartRef.nativeElement, {
+      type: 'pie',
       data: {
         labels: labels,
         datasets: [{
           label: 'Devices Distribution',
           data: data,
           backgroundColor: [
-            '#EAEAEA', // apple color
-            '#C9132B', // huawei color
-            '#c997a7', // lg color
-            '#075AA5', // motorola color
-            '#1D58F8', // nokia color
-            '#F86300', // xiaomi color
-            '#2D4BD0', // samsung color
+            '#EAEAEA',
+            '#C9132B',
+            '#c997a7',
+            '#075AA5',
+            '#1D58F8',
+            '#F86300',
+            '#2D4BD0',
+            '#6de560',
           ],
-          // hoverOffset: 4
+          hoverOffset: 4
         }]
       },
       options: {
         responsive: true,
         plugins: {
           legend: {
-            position: 'top',
+            position: 'bottom',
           },
           title: {
             display: true,
@@ -266,12 +245,11 @@ export class BrowsersComponent {
       return;
     }
 
-    const labels = this.searches.map(item => item.jobs);
-    const data = this.searches.map(item => parseFloat(item.occurrence_count));
-    console.log('l ', labels);
-    console.log('d ', data);
-    const searchChart = new Chart(this.searchChartRef.nativeElement, {
-      type: 'bar', // Or 'bar', 'doughnut', etc., depending on your preference
+    const labels: string[] = this.searches.map((item: JobOccurrence) => item.jobs);
+    const data: number[] = this.searches.map((item: JobOccurrence) => item.occurrence_count);
+
+    new Chart(this.searchChartRef.nativeElement, {
+      type: 'doughnut',
       data: {
         labels: labels,
         datasets: [{
@@ -279,23 +257,22 @@ export class BrowsersComponent {
           data: data,
           backgroundColor: [
             // Define colors for each browser
-            '#8f233a', // Android color
-            '#145480', // Linux color
-            '#d99f14', // Mac OS color
-            '#08145e', // Windows color
-            '#7cf608', // Windows color
-            '#02230c', // Windows color
-            '#1d1f21', // Windows color
+            '#8f233a',
+            '#145480',
+            '#d99f14',
+            '#08145e',
+            '#7cf608',
+            '#02230c',
+            '#1d1f21',
           ],
-          // hoverOffset: 4
+          hoverOffset: 4
         }]
       },
       options: {
-        // Define your chart options
         responsive: true,
         plugins: {
           legend: {
-            position: 'top',
+            position: 'bottom',
           },
           title: {
             display: true,
@@ -305,7 +282,5 @@ export class BrowsersComponent {
       }
     });
   }
-
-
 
 }

@@ -14,7 +14,6 @@ export class SidebarService {
 
   toggleSidebar() {
     this._showSidebar.next(!this._showSidebar.value);
-    // console.log('showSidebar toggle service  : ', this._showSidebar.value)
   }
 
   closeSidebar() {

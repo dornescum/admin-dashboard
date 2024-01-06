@@ -33,27 +33,21 @@
     </div>
     <div class="w-full flex justify-between">
       <div class="flex items-center justify-center">
-        <h1 class="text-base md:text-lg font-bold flex cursor-pointer" routerLink="/">Admin panel  <span
-          class="hidden md:block pl-2">Demo</span></h1>
+        <h1 class="text-base md:text-lg font-bold flex cursor-pointer" routerLink="/">Handymen POC  <span
+          class="hidden md:block pl-2">Stats</span></h1>
       </div>
       <div class="flex">
-        <div class="flex items-center justify-center">
-          <button class="" >
-            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"><path fill="currentColor" d="m19.485 20.154l-6.262-6.262q-.75.639-1.725.989q-.975.35-1.96.35q-2.402 0-4.066-1.663q-1.664-1.664-1.664-4.065T5.47 5.436q1.663-1.667 4.064-1.667q2.402 0 4.068 1.664q1.666 1.664 1.666 4.067q0 1.042-.369 2.017q-.37.975-.97 1.668l6.262 6.261l-.707.708ZM9.538 14.23q1.99 0 3.361-1.37q1.37-1.37 1.37-3.361q0-1.99-1.37-3.36q-1.37-1.37-3.36-1.37q-1.99 0-3.361 1.37q-1.37 1.37-1.37 3.36q0 1.99 1.37 3.36q1.37 1.37 3.36 1.37Z"/></svg>
-          </button>
+        <div class="flex items-center justify-center mr-4">
+          <a href="https://github.com/dornescum" target="_blank" class="bg-zinc-200 text-white ml-2 px-4 rounded-sm flex">
+            <img src="./assets/svg/github.svg" alt="github logo" class="pr-2">
+            Github Here</a>
         </div>
-        <button class="text-base hover:text-lg p-1 m-1 pr-2 lg:block text-zinc-600  ease-in duration-300 animate-pulse"
-                routerLink="/home/search">Meseriași
-        </button>
-
-
-
-
       </div>
     </div>
   </div>
 
 
-  <app-sidebar (onClose)="handleCloseSidebar()" *ngIf="showSidebar" data-cy="sidebar_component"></app-sidebar>
+<!--  <app-sidebar (onClose)="handleCloseSidebar()" *ngIf="showSidebar" data-cy="sidebar_component"></app-sidebar>-->
+  <app-sidebar *ngIf="showSidebar" data-cy="sidebar_component"></app-sidebar>
 </header>
 

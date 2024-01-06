@@ -1,18 +1,10 @@
-<!--<p class="pt-20">browsers works!</p>-->
-<!--<div>-->
-<!--&lt;!&ndash;  <canvasjs-chart [options]="chartOptions" [styles]="{width: '100%', height:'360px'}"></canvasjs-chart>&ndash;&gt;-->
 
-<!--  <div>-->
-<!--&lt;!&ndash;    <canvasjs-chart [options]="chartOptions"></canvasjs-chart>&ndash;&gt;-->
-<!--    <canvas #browserChart></canvas>-->
-<!--  </div>-->
-<!--</div>-->
 
 <div class="text-center pt-20">
-  <p class="font-bold">
-    Every action from register, to login , search, type of browser, type of os, etc.  is logged in database .
+  <p class="font-bold mx-4">
+    Every search at this <span class="text-blue-500"><a href="http://62.171.167.229:4000/home/search" target="_blank">link</a> </span>
+    is  logged with details about client <span> this are the statistics</span>
   </p>
-  <p>{{isLoading}}</p>
   <p *ngIf="isLoading">Loading ... </p>
 
 </div>
@@ -34,4 +26,4 @@
   </div>
 
 </div>
-<p> Updated {{day}} / {{time}}</p>
+<p class="pl-4"> Updated {{day}} / {{time}}</p>

@@ -12,6 +12,7 @@ import { statusMessages } from '../models/clientMessages';
 })
 export class DashboardComponent implements OnInit{
   @ViewChild('locationsChart', { static: false }) locationsChartRef!: ElementRef<HTMLCanvasElement>;
+  @ViewChild('citiesChart', { static: false }) citiesChartRef!: ElementRef<HTMLCanvasElement>;
   @ViewChild('entityChart', { static: false }) entitiesChartRef!: ElementRef<HTMLCanvasElement>;
   locations!: Locations[];
   entities!: Entities[];
@@ -19,7 +20,6 @@ export class DashboardComponent implements OnInit{
   isLoading = false;
   page = 1;
   limit = 10; //10
-  total = 0;
   chart!: never;
 
   constructor(private apiService: ApiService) {
@@ -38,6 +38,7 @@ export class DashboardComponent implements OnInit{
         next: (response: { data: Locations[] }) => {
           this.locations = response.data;
           this.locationsChart();
+          this.citiesChart();
           console.log('Location data ', this.locations);
           this.isLoading = false;
         },
@@ -72,15 +73,8 @@ export class DashboardComponent implements OnInit{
       this.errorMsg = statusMessages.error;
       return;
     }
-    // const locationData = this.locations;
 
-    // const countryData = locationData.reduce((acc: CountryData, item: Locations) => {
-    //   if (item.geo && typeof item.geo === 'object' && item.geo.country) {
-    //     acc[item.geo.country] = (acc[item.geo.country] || 0) + parseFloat(item.percentage);
-    //   }
-    //   return acc;
-    // }, {}) as CountryData;
-    const countryData = this.locations.reduce((acc: CountryData, item: Locations) => {
+    const countryData: CountryData = this.locations.reduce((acc: CountryData, item: Locations) => {
       const country = item.geo?.country;
       if (country) {
         acc[country] = (acc[country] || 0) + parseFloat(item.percentage);
@@ -89,8 +83,8 @@ export class DashboardComponent implements OnInit{
     }, {}) as CountryData;
 
 
-    const labels = Object.keys(countryData);
-    const data = Object.values(countryData);
+    const labels: string[] = Object.keys(countryData);
+    const data: number[] = Object.values(countryData);
 
      new Chart(this.locationsChartRef.nativeElement, {
       type: 'bar',
@@ -115,7 +109,56 @@ export class DashboardComponent implements OnInit{
           },
           title: {
             display: true,
-            text: 'Location Distribution Chart'
+            text: 'Country Search'
+          }
+        }
+      },
+    });
+  }
+
+  citiesChart() {
+    if (!this.locations) {
+      console.error("Locations data is not available.");
+      this.errorMsg = statusMessages.error;
+      return;
+    }
+
+    const countryData: CountryData = this.locations.reduce((acc: CountryData, item: Locations) => {
+      const town = item.geo?.city;
+      if (town) {
+        acc[town] = (acc[town] || 0) + parseFloat(item.percentage);
+      }
+      return acc;
+    }, {}) as CountryData;
+
+
+    const labels: string[] = Object.keys(countryData);
+    const data: number[] = Object.values(countryData);
+
+    new Chart(this.citiesChartRef.nativeElement, {
+      type: 'bar',
+      data: {
+        labels: labels,
+        datasets: [{
+          label: 'Towns Distribution',
+          data: data,
+          backgroundColor: [
+            '#EFC342',
+            '#F83D20',
+            '#11ABEA',
+            '#C01D20',
+          ],
+        }]
+      },
+      options: {
+        responsive: true,
+        plugins: {
+          legend: {
+            position: 'bottom',
+          },
+          title: {
+            display: true,
+            text: 'Town Search'
           }
         }
       },
@@ -129,15 +172,15 @@ export class DashboardComponent implements OnInit{
       return;
     }
 
-    const labels = this.entities.map(item => item.entity);
-    const data = this.entities.map(item => parseFloat(item.percentage));
+    const labels: string[] = this.entities.map((item: Entities) => item.entity);
+    const data: number[] = this.entities.map((item: Entities)  => parseFloat(item.percentage));
 
      new Chart(this.entitiesChartRef.nativeElement, {
       type: 'pie',
       data: {
         labels: labels,
         datasets: [{
-          label: 'Devices Distribution',
+          label: 'Entities Distribution',
           data: data,
           backgroundColor: [
             '#EAEAEA',
