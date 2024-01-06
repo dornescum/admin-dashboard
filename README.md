@@ -1,6 +1,8 @@
 docker-compose up --build
 
-
+![Alt Text](/src/assets/img/browsers.png)
+![Alt Text](/src/assets/img/devices.png)
+![Alt Text](/src/assets/img/jobs.png)
 # Project Overview
 
 ## Purpose
