@@ -19,3 +19,6 @@ EXPOSE 4200
 
 # Start the development server
 CMD ["npm", "start"]
+
+
+#setup pt package json cu docker  "start": "ng serve --host 0.0.0.0",
