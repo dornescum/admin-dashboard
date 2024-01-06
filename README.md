@@ -16,7 +16,5 @@ This project is built for displaying and analyzing statistics, specifically focu
 
 - **ESLint and Prettier**: Used to ensure code quality and stylistic consistency, essential for maintaining a large codebase.
 
-- **Testing Tools (Jasmine, Karma)**: These tools are included to ensure the application is robust and error-free.
-
 - **Docker**: Implies the use of containerization for the application, enhancing its portability and consistency across different development, testing, and production environments.
 
