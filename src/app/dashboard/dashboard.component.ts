@@ -21,6 +21,8 @@ export class DashboardComponent implements OnInit{
   page = 1;
   limit = 10; //10
   chart!: never;
+  lastIp!: unknown;
+  lastLL!: unknown;
 
   constructor(private apiService: ApiService) {
   }
@@ -37,9 +39,12 @@ export class DashboardComponent implements OnInit{
       .subscribe({
         next: (response: { data: Locations[] }) => {
           this.locations = response.data;
+          // console.log('locations ', this.locations);
           this.locationsChart();
           this.citiesChart();
           console.log('Location data ', this.locations);
+          this.lastIp = this.locations[this.locations.length - 1].ip;
+          this.lastLL = this.locations[this.locations.length - 1].geo?.ll;
           this.isLoading = false;
         },
         error: (error: Error) => {

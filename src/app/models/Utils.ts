@@ -5,6 +5,7 @@ export interface GeoInfo {
   eu?: string;
   range?: string;
   region?: string;
+  ll?:unknown;
 }
 
 export interface Locations {
@@ -13,6 +14,8 @@ export interface Locations {
   country?: string;
   geo?: GeoInfo;
   data?: unknown;
+  ip?: string;
+
 }
 
 export interface CountryData {
