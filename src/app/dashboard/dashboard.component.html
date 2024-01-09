@@ -5,19 +5,6 @@
   <div class="h-44 md:h-96 w-full flex place-content-center">
     <canvas #locationsChart></canvas>
   </div>
-<!--  <div class="h-0 md:h-96 w-full flex flex-col place-content-center ">-->
-<!--    <ul class="mx-2 hidden md:block">-->
-<!--      <li class="mx-2"  *ngFor="let location of locations | slice:0:5">-->
-<!--        <div class="border-b border-indigo-500 mx-2 md:mx-8">-->
-<!--          <p>Country : {{location.geo?.country}} </p>-->
-<!--          <p>Region : {{location?.geo?.region === '' ? 'N/A': location?.geo?.region}} </p>-->
-<!--          <p>Timezone : {{location.geo?.timezone}} </p>-->
-<!--        </div>-->
-<!--      </li>-->
-<!--    </ul>-->
-<!--    <p class="ml-12 my-2 font-bold">Last ip visited : {{lastIp}}</p>-->
-<!--    <p class="ml-12 my-2 font-bold">Longitude Latitude : {{lastLL}}</p>-->
-<!--  </div>-->
   <app-stats [locations]="locations" [lastIp]="lastIp" [lastLL]="lastLL"></app-stats>
 
 
