@@ -22,7 +22,7 @@ export class DashboardComponent implements OnInit{
   limit = 10; //10
   chart!: never;
   lastIp!: unknown;
-  lastLL!: unknown;
+  allIps!: {ip_address:string}[];
 
   constructor(private apiService: ApiService) {
   }
@@ -31,7 +31,7 @@ export class DashboardComponent implements OnInit{
 
     this.getLocations();
     this.getEntities();
-
+    this.getIps();
   }
   private getLocations() {
     this.isLoading = true;
@@ -43,8 +43,8 @@ export class DashboardComponent implements OnInit{
           this.locationsChart();
           this.citiesChart();
           console.log('Location data ', this.locations);
-          this.lastIp = this.locations[this.locations.length - 1].ip;
-          this.lastLL = this.locations[this.locations.length - 1].geo?.ll;
+          // this.lastIp = this.locations[this.locations.length - 1].ip;
+          // console.log('', this.lastIp);
           this.isLoading = false;
         },
         error: (error: Error) => {
@@ -63,6 +63,25 @@ export class DashboardComponent implements OnInit{
           console.log('entities data ', this.entities);
           this.isLoading = false;
           this.entitiesChart();
+        },
+        error: (error: Error) => {
+          console.error('ERROR GET ALL DATA : ', error.message);
+          this.isLoading = false;
+          this.errorMsg = statusMessages.serverError;
+        }
+      });
+  }
+
+  private getIps() {
+    this.isLoading = true;
+    this.apiService.fetchChartData('agency/statistics/ip-list', this.page, this.limit)
+      .subscribe({
+        next: (response: { data:  {ip_address:string}[] }) => {
+          this.allIps = response.data;
+
+          console.log('ip list ', this.allIps);
+          this.lastIp = this.allIps[this.allIps.length - 1]?.ip_address;
+          this.isLoading = false;
         },
         error: (error: Error) => {
           console.error('ERROR GET ALL DATA : ', error.message);

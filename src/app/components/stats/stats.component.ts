@@ -16,6 +16,4 @@ export class StatsComponent {
 
   @Input() locations!: Locations[];
   @Input() lastIp!: string | unknown;
-  @Input() lastLL!: string | unknown;
-
 }

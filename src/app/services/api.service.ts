@@ -25,4 +25,13 @@ export class ApiService {
         return throwError(() => new Error(statusMessages.error));
       }));
   }
+
+  fetchChartData(url: string, page: number, limit: number): Observable<{ message: string; data: any[], total: number, page: number, limit: number }> {
+    const queryParams = `?page=${page}&limit=${limit}`;
+    return this.http.get<{ message: string; data: any[], total: number, page: number, limit: number }>(`${this.baseUrl}${url}${queryParams}`, {headers})
+      .pipe(catchError((error) => {
+        console.error('An error occurred:', error.message);
+        return throwError(() => new Error(statusMessages.error));
+      }));
+  }
 }
